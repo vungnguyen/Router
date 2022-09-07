@@ -10,7 +10,17 @@ export default function ListProduct() {
     return (
         <div>
             <h2>List Products:</h2>
-
+            <input
+                value={searchParams.get("filter") || ""}
+                onChange={event => {
+                    let filter = event.target.value;
+                    if (filter) {
+                        setSearchParams({ filter });
+                    } else {
+                        setSearchParams({});
+                    }
+                }}
+            />
             <table className="table table-striped table-bordered ">
                 <thead>
                 <tr>
@@ -20,7 +30,15 @@ export default function ListProduct() {
                 </tr>
                 </thead>
                 <tbody>
-                {list.map((item, index) => (
+                {list.filter(product => {
+                    let filter = searchParams.get("filter");
+                    if (!filter) return true;
+                    let name = product.name.toLowerCase();
+                    // return name.startsWith(filter.toLowerCase());
+                    return name.includes(filter.toLowerCase());
+                })
+
+                    .map((item, index) => (
                     <tr>
                         <td>{item.name}</td>
                         <td>{item.price}$</td>
